@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta title="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document library</title>
+    <style>
+        table, th, tr, td {
+        border :1px solid black;
+        text-align: center;
+        padding: 10px;
+    }
+    </style>
+  <p><h1>Table Perpustakaan</h1></p>
+</head>
+<body>
+
+
+    <table id="list buku">
+   <select id ="searchCategory" oncharge="renderdataB()">
+            <option value="All">All</option>
+            <option value="Manga">Manga</option>
+            <option value="Music">Music</option>
+            <option value="Comedy">Comedy</option>
+        </select><input type="text" placeholder="title" id="searchProduct" oninput="renderdataB()"><button onclick="reset()">reset</button>
+        <p><h2>Table List Buku</h2></p>
+       </select> 
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>title</th>
+                <th>Author</th>
+                <th>Price/Week</th>
+                <th>Pages</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th colspan ="2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><button onclick="DeleteDataB()">Delete</button></td>
+                    <td><button onclick="AddDataCart()">AddtoCart</button></td>
+                </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td><input type="text" id="tbtitle" placeholder="type books title"></td>
+                <td><input type="text" id="tbAuthor" placeholder="type author title"></td>
+                <td><input type="number" id="tbPrice" placeholder="type books price"></td>
+                <td><input type="number" id="tbPage" placeholder="type books pages  "></td>
+                <td><select id="tbCategory">
+                    <option value="Manga">Manga</option>
+                    <option value="Music">Music</option>
+                    <option value="Comedy">Comedy</option>
+                </select></td>
+                <!-- <td><select id="tbStatus"> -->
+                    <option value="Available">Available</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+                </td>
+                <td colspan ="3"><button onclick="AddData()"> Add</button></td>
+            </tr>
+        </tfoot>
+    </table>
+    <br><br><br>
+
+
+
+
+    <table id="list cart">
+        <p><h2>Table Keranjang</h2></p>
+        <h4>Nama Peminjam buku: <input type="text" id="tbNamaPeminjam"></h4>
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Pages</th>
+                <th>Loan/Week</th>
+                <th colspan="2">Action</th>
+            </tr>
+        <tbody>
+            <tr id="payment">
+                <th colspan="5">Total Payment</th>
+                <th>Rp.0</th>
+                <th colspan="2"><button onclick="AddDataPinjaman()">Loan it!</button></th>
+            </tr>
+        </tbody>
+        </thead>
+    </table>
+    <br><br><br>
+
+
+
+
+
+    <table id="list pinjaman">
+        <p><h2>Table Peminjaman Buku</h2></p>
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Nama peminjam</th>
+                <th>title</th>
+                <th>Author</th>
+                <th>Pages</th>
+                <th>Return Date</th>
+                <th>Loan Duration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button onclick="bailikbuku()">Return</button></td>
+            </tr> -->
+        </tbody>
+    </table> 
+    <br>
+
+
+
+<script>
+class Buku {
+    constructor(title,author,price,page,category,status,arridxproduct){
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.page = page;
+        this.category = category;
+        this.status = status;
+        this.arridxproduct = arridxproduct;
+    }
+}
+
+
+class Cart {
+constructor(title,author,price,page,category,time,arridxproduct){
+    this.title = title;
+    this.author = author;
+    this.price = price;
+    this.page = page;
+    this.category = category;
+    this.time = time;
+    this.arridxproduct = arridxproduct;
+}   
+}
+
+
+class Loan{
+    constructor(title,author,returndate,loanduration){
+        this.name = name;
+        this.title = title;
+        this.author = author;
+        this.page = page;
+        this.returndate = returndate;
+        this.loanduration = loanduration;
+        this.arridxproduct = arridxproduct;
+    }
+}
+
+
+
+const listbuku=[
+    new Buku ("Kumo Desu ka", "Okina Baba", 15000, 30, "Manga","Available",0),
+    new Buku ("Classroom of the elite", "Shōgo Kinugasa", 15000, 30, "Manga","Available",1),
+    new Buku ("Diary speaksenglish", "kittymaster", 45000, 110, "Comedy","Available",2),
+    new Buku ("HidupkuKomedi", "Jason Kristian", 1000, 1, "Comedy","Available",3),
+    new Buku ("Koplo Brothers", "daBrothers", 95000, 60, "Music","Available",4),
+    new Buku ("Lagu dangdut populer", "Kristian Jason", 500, 10, "Music","Available",5)
+]
+
+
+    function renderdataB(){
+     let htmlresult= ''
+        let temp = listbuku
+        console.log()
+        if(document.getElementById('searchProduct').value == "Manga"){
+        temp = listbuku.filter(function(buku){
+            return i.category == "Manga"
+        })
+
+    
+        }else if(document.getElementById('searchProduct').value == "Comedy"){
+        temp = listbuku.filter(function(i){
+            return i.category == "Comedy"
+        })
+
+         }else if(document.getElementById('searchProduct').value == "Music"){
+        temp = listbuku.filter(function(i){
+            return i.category == "Music"
+        })
+    }
+
+        if(document.getElementById("searchProduct").value  != '')
+        {
+            temp =  temp.filter(function(i){return i.title == document.getElementById("searchProduct").value})
+        }
+
+        console.log(temp)
+
+            temp.forEach((item,idx) => {
+    htmlresult +=` 
+                <tr>
+                    <td>${idx+1}</td>
+                    <td>${item.title}</td>
+                    <td>${item.author}</td>
+                    <td>Rp.${parseInt(item.price).toLocaleString()}</td>
+                    <td>${item.page}</td>
+                    <td>${item.category}</td> 
+                    <td>${item.status}</td>
+                    <td><button onclick="DeleteDataB(${item.arridxproduct})">Delete</button></td>
+                    <td><button onclick="AddDataCart(${item.arridxproduct})">AddtoCart</button></td>
+                </tr>
+    `
+             })
+    
+                document.getElementsByTagName('tbody')[0].innerHTML = htmlresult
+        }
+
+
+function AddData(){
+    let title = document.getElementById('tbtitle').value;
+    let author = document.getElementById('tbAuthor').value;
+    let price = document.getElementById('tbPrice').value;
+    let page = document.getElementById('tbPage').value;
+    let category = document.getElementById('tbCategory').value;
+    let status = "Available";
+    let arridxproduct = parseInt(listbuku.length)
+    
+    let newbuku = new Buku(title,author,price,page,category,status,arridxproduct)
+    listbuku.push(newbuku)
+    renderdataB()
+    document.getElementById('tbtitle').value = "";
+    document.getElementById('tbAuthor').value = "";
+    document.getElementById('tbPrice').value = "";
+    document.getElementById('tbPage').value = "";
+    document.getElementById('tbCategory').value = "";
+}
+const listcart=[]
+const listloan=[]
+
+function AddDataCart(productidx){
+    let time = parseInt(prompt("price depending on the loan:"))
+
+    let {title,author,price,page,category,arridxproduct} = listbuku[productidx]
+    let newDataCart= new Cart(title,author,price,page,category,time,arridxproduct)
+    let check = listcart.map(function(i){return i.title})
+    if(isNaN(time)){
+        alert("Data still empty")
+}else{
+    if(!check.includes(title) && listbuku[productidx].status == "Available" ){
+                    listcart.push(newDataCart)
+                    listbuku[productidx].status = "allready in cart"
+                } else if(listbuku[productidx].status == "Booked"){
+                    alert(`The title that you seek: ${listbuku[productidx].title}is currently loaned`)
+                } else {
+                    alert(`The book: ${listbuku[indexProduct].title}is allready on the cart`)
+                }
+            }
+
+    renderdataC()
+    renderdataB()
+    bayar()
+}
+
+function renderdataC(editidxcart){
+    let htmlresult = ''
+    let tempfoot = ''
+    listcart.forEach((item,idx)=>{
+        if(editidxcart == idx){
+            htmlresult=+`
+            <tr>
+                <td>${idx+1}}</td>
+                <td>${item.title}</td>
+                <td>${item.author}</td>
+                <td>${item.page}</td>
+                <td>${item.category}</td>
+                <td> duration of loan: <input type="number" id="newloan"></td>
+                <td><button onclick="renderdataC()">Delete</button></td>
+                <td><button onclick="savedatacart(${idx})">Loan</button></td>
+            </tr>
+    `
+        } else {
+            htmlresult += `
+                    <tr>
+                        <td>${idx+1}</td>
+                        <td>${item.title}</td>
+                        <td>${item.author}</td>
+                        <td>${item.category}</td>
+                        <td>${item.page}</td>
+                        <td>${item.time} For x week Rp.${(item.price).toLocaleString()} = Rp.${(item.time * item.price).toLocaleString()}</td>
+                        <td><button onclick="DeleteDataC(${idx})">Delete</button></td>
+                        <td><button onclick="renderdataC(${idx})">Loan it</button></td>
+                    </tr>
+                    `
+                }
+            })
+            document.getElementsByTagName("tbody")[1].innerHTML = htmlresult
+        }
+        
+    // <tr>
+    //             <th>Number</th>
+    //             <th>title</th>
+    //             <th>Author</th>
+    //             <th>Category</th>
+    //             <th>Pages</th>
+    //             <th>Loan/Week</th>
+    //             <th colspan="2">Action</th>
+    //         </tr>
+
+
+function renderdataL(){
+    let htmlresult =''
+    listloan.forEach((item,idx)=>{
+        htmlresult=+`
+            <tr>
+                <td>${idx+1}</td>
+                <td>${document.getElementById("tbNamaPeminjam").value}</td>
+                <td>${item.title}</td>
+                <td>${item.author}</td>
+                <td>${item.page}</td>
+                <td>${item.returndate}</td>
+                <td>${item.loanduration}</td>
+                <td><button onclick="bailikbuku(${idx})">Return</button></td>
+            </tr>
+            `})
+            document.getElementsByTagName('tbody')[2].innerHTML = htmlresult
+}
+
+function addDataLoan(){
+    alert(`Thankyou, ${document.getElementById("tbNamaPeminjam").value} for borrowing our book`)
+            listcart.forEach((item, idx) =>{
+                let {title, author, page, arridxproduct} = listcart[idx];
+                let name = document.getElementById("tbNamaPeminjam").value;
+                let date = new Date()
+                    var dd = date.getDate();
+                    var mm = date.getMonth() +1;
+                    var yyyy = date.getFullYear();
+                date = `${dd}/${mm}/${yyyy}`    
+                
+                let totalDays = parseInt(item.time * 7)
+                let dateLine = new Date ()
+                    var dd = dateLine.setDate(dateLine.getDate() + totalDays)  // ini cuman nge set doang 
+                    var dd2 = dateLine.getDate() // ini manggil hari yang udah di set
+                    var mm = dateLine.getMonth() +1;
+                    var yyyy = dateLine.getFullYear();
+                dateLine = `${dd2}/${mm}/${yyyy}`
+
+                let newDataBooked = new booked(name, title, author, page, returndate, loanduration, arridxproduct)
+                let check = listloan.map(function(i){return i.title})
+                if(!check.includes(title)){
+                   listbuku[item.arridxproduct].status = "Booked"
+                   listloan.push(newDataBooked)
+                } else {
+                    alert(`Books with title: ${listbuku[idx].title} are currently booked`)
+                }
+            })
+            listcart.splice(0,listcart.length);
+            renderdataC()
+            renderdataB()
+            renderdataL()
+            bayar()
+}
+
+function DeleteDataB(productidx){
+    if(listbuku[productidx].status == "allready in cart"){
+        alert("Books are inside of cart")
+}else{
+    listbuku.splice(productidx,1);
+    renderdataB();
+}}
+
+function savedatacart(idx){
+    if(listcart[idx].time == document.getElementById("newloan").value ){
+                alert("Time duration is still the same")
+            } else if (document.getElementById("newloan").value == 0 || document.getElementById("newloan").value == ""){
+                alert("entr the duration of the loan")
+            } else {
+                listcart[idx].time = parseInt(document.getElementById("newloan").value)
+            }
+            renderdataC()
+           bayar()
+}
+
+
+function reset(){
+            document.getElementById("searchProduct").value = ""
+            document.getElementById("searchCategory").value = "All Product"
+            renderdataB()
+        }
+
+function bayar(){
+    let total = 0
+    if(listcart.length > 0){
+        listcart.forEach((item, idx)=>{
+        total += item.time * item.price
+            })
+    document.getElementById("payment").innerHTML = `
+        <th colspan="5">Total Payment</th>
+        <th>Rp.${total.toLocaleString()}</th>
+        <th colspan="2"><button onclick="addToBooked()">Confirm</button></th>
+    `
+    } else {
+        // alert(arrCart.length)
+        document.getElementById("payment").innerHTML =`
+        <th colspan="5">Total Payment</th>
+        <th>Rp.0</th>
+        <th colspan ="2"><button onclick="addDataLoan()">Confirm</button></th>
+    `
+    }
+    
+}
+function DeleteDataC(idx){
+    listbuku[listcart[index].arridxproduct].status = "Available";
+            listcart.splice(idx,1);
+            renderdataC()
+            renderdataB()
+           bayar()
+}
+
+function Returning(){
+    listbuku[listbuku[idx].arridxproduct].status = "Available"
+    listloan.splice(idx,1)
+    renderdataL()
+   renderdataB()
+}
+
+renderdataB()
+renderdataC()
+bayar()
+renderdataL()
+
+
+</script>
+</body>
+</html>
